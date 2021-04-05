@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASS}"
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql
+  adminer:
+    image: adminer
+    container_name: adminer_container_tiger
+    ports:
+      - 8080:8080
+volumes:
+  py-of-the-tiger:

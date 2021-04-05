@@ -1,0 +1,43 @@
+service: pott-lambda
+plugins:
+  - serverless-python-requirements
+  - serverless-dotenv-plugin
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: eu-west-1
+  role: arn:aws:iam::534900169478:role/lambda-execution-role
+  lambdaHashingVersion: 20201221
+  vpc:
+    securityGroupIds:
+      - sg-00d713bdedcadb4bc
+    subnetIds:
+      - subnet-093ac2839ae3deb68
+
+
+functions:
+  execute:
+    handler: src/app.execute
+    events: 
+      - s3:
+          bucket: ${env:BUCKET}
+          event: s3:ObjectCreated:*
+          rules: 
+            - prefix: incoming/
+            - suffix: .csv
+    timeout: 100
+    environment:
+      PORT: ${env:PORT}
+      DB: ${env:DB}
+      HOST: ${env:HOST}
+      USER: ${env:USER}
+      PASSWORD: ${env:PASSWORD}
+      BUCKET: ${env:BUCKET}
+
+package:
+  exclude:
+    - .venv/**
+    - .vscode/**
+    - node_modules/**

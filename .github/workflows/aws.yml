@@ -1,0 +1,37 @@
+name: Deploy To AWS
+on:
+  push:
+    branches:
+      - prod
+      - main
+jobs:
+  deploy:
+    name: test and deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+        python-version: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install pytest
+      - run: pip install -r requirements.txt
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npx serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          HOST: ${{ secrets.HOST }}
+          PORT: ${{ secrets.PORT }}
+          USER: ${{ secrets.USER }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          DB: ${{ secrets.DB }}
+          BUCKET: ${{ secrets.BUCKET }}
