@@ -18,9 +18,9 @@ WIP
 
 - [x] Transform - Remove sensitive data
 
-- [ ] Transform - Normalise data to 3NF
+- [x] Transform - Normalise data to 3NF
 
-- [ ] Load - Load data into database
+- [x] Load - Load data into database
 
 ## Definition of Done
 
